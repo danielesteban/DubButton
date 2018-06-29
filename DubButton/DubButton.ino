@@ -16,7 +16,7 @@ struct {
   uint8_t read;
   uint8_t state;
   uint32_t debounce;
-} buttons[2] = {{ PRIMARY_BUTTON_PIN, HIGH, 0 }, { SECONDARY_BUTTON_PIN, HIGH, 0 }};
+} buttons[2] = {{ PRIMARY_BUTTON_PIN, HIGH, HIGH, 0 }, { SECONDARY_BUTTON_PIN, HIGH, HIGH, 0 }};
 
 extern const char* const keywords[] PROGMEM;
 extern const uint8_t num_keywords;
@@ -174,21 +174,19 @@ void onButton(const uint8_t button) {
 }
 
 void loop() {
+  const uint32_t now = millis();
   for (uint8_t i = 0; i < 2; i++) {
     // Update button state
-    const uint8_t read = digitalRead(buttons[i].pin);
-    const uint32_t now = millis();
-    if (buttons[i].read != read) {
+    const uint8_t state = digitalRead(buttons[i].pin);
+    if (buttons[i].read != state) {
       buttons[i].debounce = now;
     }
-    if ((now - buttons[i].debounce) > 10) {
-      if (buttons[i].state != read) {
-        buttons[i].state = read;
-        if (read == LOW) {
-          onButton(i);
-        }
+    buttons[i].read = state;
+    if (buttons[i].state != state && (now - buttons[i].debounce) > 10) {
+      buttons[i].state = state;
+      if (state == LOW) {
+        onButton(i);
       }
     }
-    buttons[i].read = read;
   }
 }
