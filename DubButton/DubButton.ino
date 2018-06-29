@@ -9,7 +9,7 @@
 // Youtube app keyboard config
 #define KEYBOARD_STRIDE 7
 #define KEYBOARD_HEIGHT 4
-#define KEYBOARD_SPANISH 1 // Set this flag if your youtube app keyboard has an "ñ"
+#define KEYBOARD_SPANISH 1 // Set this flag if your youtube app keyboard has an "Ñ"
 
 struct {
   uint8_t pin;
@@ -53,6 +53,26 @@ void send(const uint32_t code, const uint32_t wait) {
   delay(wait);
 }
 
+void navigateGrid(const uint8_t col, const uint8_t row, uint8_t& currentCol, uint8_t& currentRow) {
+  // Navigate through the keyboard grid
+  {
+    const int8_t distance = (int8_t) col - currentCol;
+    if (distance != 0) {
+      const uint32_t direction = distance > 0 ? RIGHT : LEFT;
+      for (uint8_t x = 0; x < abs(distance); x++) send(direction, 300);
+      currentCol = col;
+    }
+  }
+  {
+    const int8_t distance = (int8_t) row - currentRow;
+    if (distance != 0) {
+      const uint32_t direction = distance > 0 ? DOWN : UP;
+      for (uint8_t y = 0; y < abs(distance); y++) send(direction, 300);
+      currentRow = row;
+    }
+  }
+}
+
 void openYoutube() {
   // Smart hub
   send(SMART_HUB, 10000);
@@ -76,6 +96,7 @@ void playSomeMusic() {
   send(LEFT, 500);
   send(LEFT, 500);
   send(UP, 1500);
+  // Navigate to keyboard
   send(RIGHT, 500);
   send(RIGHT, 500);
   // Initialize query
@@ -91,6 +112,8 @@ void playSomeMusic() {
     }
   }
   // Type search query
+  uint8_t col = 0;
+  uint8_t row = 0;
   const uint8_t numWords = min(3, num_keywords);
   for (uint8_t i = 0; i < numWords; i++) {
     // Fetch keyword
@@ -98,32 +121,22 @@ void playSomeMusic() {
     for (uint8_t l = 0; l < strlen_P(keyword); l++) {
       uint8_t letter = toupper(pgm_read_byte_near(keyword + l)) - 'A';
       #ifdef KEYBOARD_SPANISH
-      if (letter > 13) letter += 1;
+      // Skip "Ñ"
+      if (letter > 13) letter++;
       #endif
-      const uint8_t row = letter / KEYBOARD_STRIDE;
-      const uint8_t col = letter % KEYBOARD_STRIDE;
-      // Go to letter
-      for (uint8_t y = 0; y < row; y++) send(DOWN, 300);
-      for (uint8_t x = 0; x < col; x++) send(RIGHT, 300);
+      // Navigate to letter
+      navigateGrid(letter % KEYBOARD_STRIDE, letter / KEYBOARD_STRIDE, col, row);
       // Submit letter
       send(ENTER, 500);
-      // Go back to A
-      for (uint8_t y = 0; y < row; y++) send(UP, 300);
-      for (uint8_t x = 0; x < col; x++) send(LEFT, 300);
     }
-    // Go to spacebar
-    for (uint8_t y = 0; y < KEYBOARD_HEIGHT; y++) {
-      send(DOWN, 300);
-    }
+    // Navigate to spacebar
+    navigateGrid(0, row, col, row);
+    navigateGrid(0, KEYBOARD_HEIGHT, col, row);
     if (i < numWords - 1) {
       // Submit spacebar
       send(ENTER, 500);
-      // Go back to A
-      for (uint8_t y = 0; y < KEYBOARD_HEIGHT; y++) {
-        send(UP, 300);
-      }
     } else {
-      // Go to search button
+      // Navigate to search button
       send(RIGHT, 300);
       // Submit search
       send(ENTER, 1500);

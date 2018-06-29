@@ -1,5 +1,6 @@
 #include <avr/pgmspace.h>
 
+// Note: The keyboard logic only supports ASCII A-Z chars
 const char keyword_0[] PROGMEM = "dub";
 const char keyword_1[] PROGMEM = "psy";
 const char keyword_2[] PROGMEM = "trance";
