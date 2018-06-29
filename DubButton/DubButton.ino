@@ -135,17 +135,16 @@ void playSomeMusic() {
     if (i < numWords - 1) {
       // Submit spacebar
       send(ENTER, 500);
-    } else {
-      // Navigate to search button
-      send(RIGHT, 300);
-      // Submit search
-      send(ENTER, 1500);
-      // Navigate to first video
-      send(DOWN, 300);
-      // Play video
-      send(ENTER, 500);
     }
   }
+  // Navigate to search button
+  send(RIGHT, 300);
+  // Submit search
+  send(ENTER, 1500);
+  // Navigate to first video
+  send(DOWN, 300);
+  // Play video
+  send(ENTER, 0);
 }
 
 void onButton(const uint8_t button) {
