@@ -56,28 +56,28 @@ void send(const uint32_t code, const uint32_t wait) {
 void navigateGrid(const uint8_t col, const uint8_t row, uint8_t& currentCol, uint8_t& currentRow) {
   // Navigate through the keyboard grid
   {
-    const int8_t distance = (int8_t) col - currentCol;
-    if (distance != 0) {
-      const uint32_t direction = distance > 0 ? RIGHT : LEFT;
-      for (uint8_t x = 0; x < abs(distance); x++) send(direction, 300);
-      currentCol = col;
-    }
-  }
-  {
     const int8_t distance = (int8_t) row - currentRow;
     if (distance != 0) {
       const uint32_t direction = distance > 0 ? DOWN : UP;
-      for (uint8_t y = 0; y < abs(distance); y++) send(direction, 300);
+      for (uint8_t y = 0; y < abs(distance); y++) send(direction, 500);
       currentRow = row;
+    }
+  }
+  {
+    const int8_t distance = (int8_t) col - currentCol;
+    if (distance != 0) {
+      const uint32_t direction = distance > 0 ? RIGHT : LEFT;
+      for (uint8_t x = 0; x < abs(distance); x++) send(direction, 500);
+      currentCol = col;
     }
   }
 }
 
 void openYoutube() {
   // Smart hub
-  send(SMART_HUB, 10000);
+  send(SMART_HUB, 15000);
   // Recent -> Featured
-  send(LEFT, 1000);
+  send(LEFT, 5000);
   send(ENTER, 5000);
   // Apps menu
   send(ENTER, 10000);
@@ -138,11 +138,11 @@ void playSomeMusic() {
     }
   }
   // Navigate to search button
-  send(RIGHT, 300);
+  send(RIGHT, 500);
   // Submit search
   send(ENTER, 1500);
   // Navigate to first video
-  send(DOWN, 300);
+  send(DOWN, 500);
   // Play video
   send(ENTER, 0);
 }
@@ -154,15 +154,15 @@ void onButton(const uint8_t button) {
       // Power up the TV
       send(POWER, 15000);
       // Keep it quiet while it loads up
-      send(MUTE, 20000);
+      send(MUTE, 60000);
       // Preload smart hub
-      send(SMART_HUB, 10000);
-      send(LEFT, 1000);
-      send(ENTER, 50000);
+      send(SMART_HUB, 15000);
+      send(LEFT, 5000);
+      send(ENTER, 40000);
       // TV should be ready
       openYoutube();
       // Give it some extra time to load youtube for the first time
-      send(MUTE, 40000);
+      send(MUTE, 20000);
       break;
     case 1:
       // Secondary button
