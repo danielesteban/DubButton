@@ -75,7 +75,7 @@ void navigateGrid(const uint8_t col, const uint8_t row, uint8_t& currentCol, uin
 
 void openYoutube() {
   // Smart hub
-  send(SMART_HUB, 15000);
+  send(SMART_HUB, 10000);
   // Recent -> Featured
   send(LEFT, 5000);
   send(ENTER, 5000);
@@ -93,9 +93,9 @@ void openYoutube() {
 
 void playSomeMusic() {
   // Navigate to search
-  send(LEFT, 500);
-  send(LEFT, 500);
-  send(UP, 1500);
+  send(LEFT, 1000);
+  send(LEFT, 1000);
+  send(UP, 3000);
   // Navigate to keyboard
   send(RIGHT, 500);
   send(RIGHT, 500);
@@ -130,8 +130,7 @@ void playSomeMusic() {
       send(ENTER, 500);
     }
     // Navigate to spacebar
-    navigateGrid(0, row, col, row);
-    navigateGrid(0, KEYBOARD_HEIGHT, col, row);
+    navigateGrid(col, KEYBOARD_HEIGHT, col, row);
     if (i < numWords - 1) {
       // Submit spacebar
       send(ENTER, 500);
@@ -140,9 +139,7 @@ void playSomeMusic() {
   // Navigate to search button
   send(RIGHT, 500);
   // Submit search
-  send(ENTER, 1500);
-  // Navigate to first video
-  send(DOWN, 500);
+  send(ENTER, 3000);
   // Play video
   send(ENTER, 0);
 }
