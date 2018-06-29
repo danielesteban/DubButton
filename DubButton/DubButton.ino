@@ -88,7 +88,7 @@ void openYoutube() {
   send(RIGHT, 1000);
   send(RIGHT, 1000);
   // Start youtube app
-  send(ENTER, 20000);
+  send(ENTER, 30000);
 }
 
 void playSomeMusic() {
@@ -159,7 +159,7 @@ void onButton(const uint8_t button) {
       // TV should be ready
       openYoutube();
       // Give it some extra time to load youtube for the first time
-      send(MUTE, 20000);
+      send(MUTE, 10000);
       break;
     case 1:
       // Secondary button
