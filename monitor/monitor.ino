@@ -38,6 +38,9 @@ void loop() {
         case SMART_HUB:
           Serial.println("SMART_HUB");
           break;
+        case UP:
+          Serial.println("UP");
+          break;
         case LEFT:
           Serial.println("LEFT");
           break;
