@@ -1,5 +1,5 @@
 // This is a simple sketch to debug/monitor the IR output of the DubButton.
-// Upload it to an arduino board that has a hardware serial,
+// Upload it to any arduino board that has a hardware serial,
 // Connect an IR Receiver to it and open the serial monitor.
 
 #include <IRremote.h>
